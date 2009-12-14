@@ -9,12 +9,12 @@
  *  more details.
  */
 
-require 'config.php';
-require 'RLPlurkAPI.php';
+require '../config.php';
+require '../alplurkapi/al_plurk_api.php';
 
 date_default_timezone_set('Asia/Taipei');
 
-$plurk_api = new RLPlurkAPI( $api_key);
+$plurk_api = new al_plurk_api( $api_key);
 $plurk_api->login( $username, $password);
 
 $funcs= array(
@@ -28,7 +28,7 @@ function help()
 	global $plurk_api, $plurks;
 
 	for( $i= 1; $i < count( $func); $i++)
-		$plurk_api->respondToPlurk( $plurk['plurk_id'], 'says', $func[ $i][ 0] . " - " . $func[ $i][ 1]);
+		$plurk_api->plruk_response_add( $plurk['plurk_id'], 'says', $func[ $i][ 0] . " - " . $func[ $i][ 1]);
 		
 	return;
 }
@@ -86,7 +86,7 @@ function response_plurk( $plurk)
 
 		if( $match[1] == 'translate')
 		{
-			$plurk_api->respondToPlurk( $plurk['plurk_id'], 'says', translate( $match[ 2], $match[ 3]));
+			$plurk_api->plurk_response_add( $plurk['plurk_id'], 'says', translate( $match[ 2], $match[ 3]));
 		}
 		else if( $match[1] == 'convert')
 		{
@@ -95,15 +95,15 @@ function response_plurk( $plurk)
 			$to= $mm[ 4];
 			$amount= $mm[2];
 
-			$plurk_api->respondToPlurk( $plurk['plurk_id'], 'says', convert( $from, $to, $amount));
+			$plurk_api->plurk_response_add( $plurk['plurk_id'], 'says', convert( $from, $to, $amount));
 		}
 		else
-			$plurk_api->respondToPlurk( $plurk['plurk_id'], 'says', 'yoyoyo (rock)');
-		$plurk_api->mutePlurk( $plurk['plurk_id']);
+			$plurk_api->plurk_response_add( $plurk['plurk_id'], 'says', 'yoyoyo (rock)');
+		$plurk_api->plurk_mute( $plurk['plurk_id']);
 	}
 }
 
-$plurks= $plurk_api->getPlurks();
+$plurks= $plurk_api->plurk_from();
 $plurks= $plurks['plurks'];
 //print_r( $plurks);
 
